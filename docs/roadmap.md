@@ -7,10 +7,16 @@
 - [x] Serial execution; explicit --limit required
 - [x] Reject force/ensure until implemented
 - [ ] Validate on FreeBSD 12.x, 13.x, 14.x, 15.x
+  - [ ] 14.4
+  - [ ] 14.5
+  - [ ] 15.0
+  - [ ] 15.1
+  - [ ] CURRENT (at this time it's an early 16)
 
 ## Milestone 1 — release selection/staging (read-only)
 
 - [ ] Discover **supported production** FreeBSD -RELEASE and architecture from official FreeBSD sources, with explicit overrides
+- [ ] more or less gracefully detect and bail on unstable (non-release) versions
 - [ ] Check boot scheme, filesystem, free space, console/rollback options, network and SSH configuration
 - [ ] Fetch archives over IPv4 where needed; verify against authenticated trusted checksums/signatures
 - [ ] Safe staging; no changes to installed base
