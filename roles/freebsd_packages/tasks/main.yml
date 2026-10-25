@@ -1,0 +1,24 @@
+---
+- name: Reject package-changing modes until upgrade strategy is tested
+  ansible.builtin.assert:
+    that:
+      - freebsd_packages_mode == 'inspect'
+    fail_msg: "Package modifications are not yet supported."
+  delegate_to: localhost
+  become: false
+
+- name: Inspect installed package tool without modifying host
+  ansible.builtin.raw: >-
+    if test -x /usr/local/sbin/pkg-static;
+    then /usr/local/sbin/pkg-static -v;
+    elif test -x /usr/sbin/pkg; then /usr/sbin/pkg -v;
+    else echo "pkg unavailable"; fi
+  register: freebsd_pkg_version
+  changed_when: false
+  failed_when: false
+
+- name: Report package tool status
+  ansible.builtin.debug:
+    msg:
+      package_tool: "{{ freebsd_pkg_version.stdout | trim }}"
+      changes_performed: false

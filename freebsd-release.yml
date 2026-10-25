@@ -1,0 +1,19 @@
+---
+- name: FreeBSD release inspection and safety preflight
+  hosts: freebsd_test
+  gather_facts: false
+  any_errors_fatal: false
+  serial: 1
+  pre_tasks:
+    - name: Require an explicit host limit to avoid accidental fleet targeting
+      ansible.builtin.assert:
+        that:
+          - ansible_limit is defined
+          - ansible_limit | length > 0
+        fail_msg: "Supply --limit with an explicit test host/group."
+      run_once: true
+      delegate_to: localhost
+      become: false
+  roles:
+    - role: freebsd_release
+    - role: freebsd_packages

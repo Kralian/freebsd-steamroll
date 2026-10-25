@@ -1,0 +1,64 @@
+---
+- name: Reject unimplemented and potentially destructive operations
+  ansible.builtin.assert:
+    that:
+      - freebsd_release_mode == 'inspect'
+    fail_msg: >-
+      Only freebsd_release_mode=inspect is currently supported. Ensure/force
+      require release verification, rollback and tested recovery paths.
+  delegate_to: localhost
+  become: false
+
+- name: Identify target OS without relying on Python
+  ansible.builtin.raw: uname -s
+  register: freebsd_uname
+  changed_when: false
+
+- name: Require FreeBSD target
+  ansible.builtin.assert:
+    that:
+      - freebsd_uname.stdout | trim == 'FreeBSD'
+    fail_msg: "Target did not identify as FreeBSD."
+  delegate_to: localhost
+  become: false
+
+- name: Read running kernel release
+  ansible.builtin.raw: uname -r
+  register: freebsd_kernel
+  changed_when: false
+
+- name: Read installed release versions
+  ansible.builtin.raw: freebsd-version -kru
+  register: freebsd_versions
+  changed_when: false
+
+- name: Inspect architecture
+  ansible.builtin.raw: uname -m
+  register: freebsd_arch
+  changed_when: false
+
+- name: Inspect root filesystem and space
+  ansible.builtin.raw: "df -k / /var/tmp; mount"
+  register: freebsd_storage
+  changed_when: false
+
+- name: Inspect recovery and download tool availability
+  ansible.builtin.raw: >-
+    for tool in /rescue/sh /rescue/tar /rescue/dd /usr/bin/fetch
+    /usr/sbin/pkg /usr/local/sbin/pkg-static /sbin/zfs /sbin/zpool;
+    do if test -x "$tool"; then echo "present $tool";
+    else echo "missing $tool"; fi; done
+  register: freebsd_tools
+  changed_when: false
+
+- name: Report inspection results
+  ansible.builtin.debug:
+    msg:
+      mode: "{{ freebsd_release_mode }}"
+      requested_target: "{{ freebsd_release_target }}"
+      kernel: "{{ freebsd_kernel.stdout | trim }}"
+      architecture: "{{ freebsd_arch.stdout | trim }}"
+      release_versions: "{{ freebsd_versions.stdout_lines }}"
+      filesystem: "{{ freebsd_storage.stdout_lines }}"
+      tool_availability: "{{ freebsd_tools.stdout_lines }}"
+      changes_performed: false

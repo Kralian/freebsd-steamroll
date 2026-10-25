@@ -1,0 +1,13 @@
+# Never commit real inventories or credentials
+inventory.ini
+inventory/
+!inventory/.gitkeep
+uv.env
+.env
+*.pem
+*.key
+id_rsa*
+.venv/
+__pycache__/
+.pytest_cache/
+*.retry
