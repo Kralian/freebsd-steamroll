@@ -1,0 +1,6 @@
+---
+# No destructive mode is implemented yet.
+freebsd_release_mode: inspect
+# Future values: latest or explicit X.Y-RELEASE, but discovery is not yet implemented.
+freebsd_release_target: latest
+freebsd_release_preserve_config: []
