@@ -11,3 +11,4 @@ id_rsa*
 __pycache__/
 .pytest_cache/
 *.retry
+uv.lock
