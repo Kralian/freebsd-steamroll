@@ -12,8 +12,8 @@
     * recognized by ansible basics so 14.4->14.4
     [✔✔   ] 14.4
     [✔✔   ] 14.5
-    [     ] 15.0
-    [     ] 15.1
+    [✔✔   ] 15.0
+    [✔✔   ] 15.1
     [     ] CURRENT (at this time it's an early 16)
 
 ## Milestone 1 — release selection/staging (read-only)
